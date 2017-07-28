@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Categorías</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <button ion-item
+            *ngFor="let linea of _productos.lineas"
+            [navPush]="porCategorias"
+            [navParams]="{ linea: linea}">
+      <ion-icon [name]="linea.icono" item-left></ion-icon>
+      {{ linea.linea }}
+    </button>
+  </ion-list>
+</ion-content>
