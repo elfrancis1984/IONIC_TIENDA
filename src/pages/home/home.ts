@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
-import { ProductosProvider, CarritoProvider }  from "../../providers/index.providers";
+import { ProductosProvider, CarritoProvider, UsuarioProvider }  from "../../providers/index.providers";
 import { ProductoPage } from "../producto/producto";
 
 @Component({
@@ -15,7 +15,8 @@ export class HomePage {
 
   constructor(public navCtrl: NavController,
               private _productos: ProductosProvider,
-              private _carrito: CarritoProvider) {
+              private _carrito: CarritoProvider,
+              private _usuario: UsuarioProvider) {
 
   }
 

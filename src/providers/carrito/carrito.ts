@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 import { AlertController, Platform, ModalController } from "ionic-angular";
@@ -7,10 +7,12 @@ import { Storage } from '@ionic/storage';
 import { UsuarioProvider } from "../usuario/usuario";
 
 import { CarritoPage, LoginPage } from "../../pages/index.paginas";
+import { URL_SERVICIOS } from "../../config/url.servicios";
 
 @Injectable()
 export class CarritoProvider {
   items:any[] = [];
+  total_carrito:number = 0;
 
   constructor(public http: Http,
               private alertCtrl: AlertController,
@@ -20,6 +22,45 @@ export class CarritoProvider {
               private modalCtrl: ModalController) {
     console.log('Hello CarritoProvider Provider');
     this.cargar_storage();
+    this.actualizar_total();
+  }
+
+  remover_item(idx:number){
+    this.items.splice(idx,1);
+    this.guardar_storage();
+    this.actualizar_total();
+  }
+
+  realizar_pedido(){
+    let data = new URLSearchParams();
+    let codigos:string[] = [];
+
+    for(let item of this.items){
+      codigos.push(item.codigo);
+    }
+    //console.log(codigos);
+    data.append("items", codigos.join(","));
+    let url = `${ URL_SERVICIOS }/pedidos/realizar_orden/${ this._usuario.token}/${ this._usuario.id_usuario}`;
+    this.http.post(url, data)
+             .subscribe( resp => {
+               let respuesta = resp.json();
+               if(respuesta.error){
+                 //mostrar alerta con mensaje de error
+                 this.alertCtrl.create({
+                   title: 'Error',
+                   subTitle: respuesta.mensaje,
+                   buttons: ["OK"]
+                 }).present();
+               }else{
+                 //todo bien
+                 this.items = [];
+                 this.alertCtrl.create({
+                   title: 'Exito',
+                   subTitle: 'Pedido realizado con exito!',
+                   buttons: ["OK"]
+                 }).present();
+               }
+             });
   }
 
   ver_carrito(){
@@ -35,7 +76,7 @@ export class CarritoProvider {
     //let modal = this.modalCtrl.create(LoginPage);
     modal.onDidDismiss( (abrirCarrito:boolean) => {
       if(abrirCarrito){
-        this.modalCtrl.create(CarritoPage);
+        this.modalCtrl.create(CarritoPage).present();
       }
     });
   }
@@ -53,6 +94,14 @@ export class CarritoProvider {
     }
     this.items.push(item_parametro);
     this.guardar_storage();
+    this.actualizar_total();
+  }
+
+  actualizar_total(){
+    this.total_carrito = 0;
+    for(let item of this.items){
+      this.total_carrito += Number(item.precio_compra);
+    }
   }
 
   private guardar_storage(){
