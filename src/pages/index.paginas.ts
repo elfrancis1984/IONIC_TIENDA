@@ -7,3 +7,4 @@ export { OrdenesDetallePage } from "./ordenes-detalle/ordenes-detalle";
 export { PorCategoriasPage } from "./por-categorias/por-categorias";
 export { ProductoPage } from "./producto/producto";
 export { TabsPage } from "./tabs/tabs";
+export { BusquedaPage } from "./busqueda/busqueda";

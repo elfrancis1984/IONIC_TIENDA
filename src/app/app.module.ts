@@ -21,7 +21,8 @@ import {
           OrdenesDetallePage,
           PorCategoriasPage,
           ProductoPage,
-          TabsPage
+          TabsPage,
+          BusquedaPage
         } from "../pages/index.paginas";
 
 @NgModule({
@@ -36,6 +37,7 @@ import {
     PorCategoriasPage,
     ProductoPage,
     TabsPage,
+    BusquedaPage,
     ImagenPipe
   ],
   imports: [
@@ -55,6 +57,7 @@ import {
     OrdenesDetallePage,
     PorCategoriasPage,
     ProductoPage,
+    BusquedaPage,
     TabsPage
   ],
   providers: [

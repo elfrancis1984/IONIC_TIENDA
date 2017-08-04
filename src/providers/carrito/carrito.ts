@@ -13,6 +13,7 @@ import { URL_SERVICIOS } from "../../config/url.servicios";
 export class CarritoProvider {
   items:any[] = [];
   total_carrito:number = 0;
+  ordenes:any[] = [];
 
   constructor(public http: Http,
               private alertCtrl: AlertController,
@@ -133,6 +134,28 @@ export class CarritoProvider {
       }
     });
     return promesa;
+  }
+
+  cargar_ordenes(){
+    let url = `${URL_SERVICIOS}/pedidos/obtener_pedidos/${this._usuario.token}/${this._usuario.id_usuario}`;
+    this.http.get(url)
+              .map( resp => resp.json())
+              .subscribe( data => {
+                if(data.error){
+                  //mensaje de error
+                  console.log(data.mensaje);
+                }else{
+                  //ok
+                  console.log(data.ordenes);
+                  this.ordenes = data.ordenes;
+                }
+              });
+  }
+
+  borrar_orden(orden_id:string){
+    let url = `${ URL_SERVICIOS}/pedidos/borrar_pedido/${this._usuario.token}
+/${this._usuario.id_usuario}/${orden_id}`;
+    return this.http.delete(url).map( resp => resp.json());
   }
 
 }

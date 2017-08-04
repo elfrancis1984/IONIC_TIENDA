@@ -1,12 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the OrdenesDetallePage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
+import { CarritoProvider } from "../../providers/carrito/carrito";
 
 @Component({
   selector: 'page-ordenes-detalle',
@@ -14,11 +8,23 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class OrdenesDetallePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  orden:any = {};
+
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private _carrito: CarritoProvider) {
+    this.orden = this.navParams.get("orden");
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad OrdenesDetallePage');
+  borrar_orden( orden_id:string){
+    this._carrito.borrar_orden(orden_id)
+                 .subscribe( data => {
+                   if(data.error){
+                     //mensaje de error
+                   }else{
+                     this.navCtrl.pop();
+                   }
+                 });
   }
 
 }
